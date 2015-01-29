@@ -1,0 +1,11 @@
+[Unit]
+Description=Mysql Server
+After=docker.service
+
+[Service]
+TimeoutStartSec=0
+ExecStartPre=-/usr/bin/docker kill mysql
+ExecStartPre=-/usr/bin/docker rm mysql
+ExecStartPre=/usr/bin/docker pull tutum/mysql
+ExecStart=/usr/bin/docker run --name mysql -P tutum/mysql
+ExecStop=/usr/bin/docker stop mysql

@@ -1,0 +1,13 @@
+[Unit]
+Description=Announce Wordpress Leitora na Holanda
+BindsTo=leitoranaholanda.service
+After=leitoranaholanda.service
+
+[Service]
+EnvironmentFile=/etc/environment
+ExecStartPre=/usr/bin/etcdctl set /nginx-lb/server/leitoranaholanda/server_name 'www.leitoranaholanda.com.br leitoranaholanda.com.br'
+ExecStart=/bin/sh -c "while true; do etcdctl set /nginx-lb/server/leitoranaholanda/upstream/main '${COREOS_PRIVATE_IPV4}:1000' --ttl 60;sleep 45;done"
+ExecStop=/usr/bin/etcdctl rm --recursive /nginx-lb/server/leitoranaholanda
+
+[X-Fleet]
+MachineOf=leitoranaholanda.service

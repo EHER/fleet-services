@@ -1,0 +1,12 @@
+[Unit]
+Description=Wordpress Leitora na Holanda
+After=docker.service
+
+[Service]
+TimeoutStartSec=0
+ExecStartPre=-/usr/bin/docker kill leitoranaholanda
+ExecStartPre=-/usr/bin/docker rm leitoranaholanda
+ExecStartPre=/usr/bin/docker pull tutum/wordpress
+ExecStart=/usr/bin/docker run --name leitoranaholanda -p 1000:80 -p 2000:3306 tutum/wordpress
+ExecStop=/usr/bin/docker stop leitoranaholanda
+

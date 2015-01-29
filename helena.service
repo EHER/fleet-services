@@ -1,0 +1,12 @@
+[Unit]
+Description=Wordpress da Helena
+After=docker.service
+
+[Service]
+TimeoutStartSec=0
+ExecStartPre=-/usr/bin/docker kill helena
+ExecStartPre=-/usr/bin/docker rm helena
+ExecStartPre=/usr/bin/docker pull tutum/wordpress
+ExecStart=/usr/bin/docker run --name helena -p 1001:80 -p 2001:3306 tutum/wordpress
+ExecStop=/usr/bin/docker stop helena
+

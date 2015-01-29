@@ -1,0 +1,13 @@
+[Unit]
+Description=Announce Wordpress da Helena
+BindsTo=helena.service
+After=helena.service
+
+[Service]
+EnvironmentFile=/etc/environment
+ExecStartPre=/usr/bin/etcdctl set /nginx-lb/server/helena/server_name 'www.helena.eher.com.br helena.eher.com.br'
+ExecStart=/bin/sh -c "while true; do etcdctl set /nginx-lb/server/helena/upstream/main '${COREOS_PRIVATE_IPV4}:1001' --ttl 60;sleep 45;done"
+ExecStop=/usr/bin/etcdctl rm --recursive /nginx-lb/server/helena
+
+[X-Fleet]
+MachineOf=helena.service

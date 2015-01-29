@@ -1,0 +1,15 @@
+[Unit]
+Description=Nginx Load Balancer
+After=docker.service
+
+[Service]
+TimeoutStartSec=0
+EnvironmentFile=/etc/environment
+ExecStartPre=-/usr/bin/docker kill nginx-lb-%i
+ExecStartPre=-/usr/bin/docker rm nginx-lb-%i
+ExecStartPre=/usr/bin/docker pull eher/nginx-lb
+ExecStart=/usr/bin/docker run --name nginx-lb-%i -p 80:80 -p 443:443 -e ETCD_IP=${COREOS_PRIVATE_IPV4} eher/nginx-lb
+ExecStop=/usr/bin/docker stop nginx-lb-%i
+
+[X-Fleet]
+Conflicts=nginx-lb*
